@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsString, IsUUID, IsBoolean, ValidateNested, IsOptional, IsIn, IsArray, ArrayNotEmpty, IsEnum } from 'class-validator';
 import { Type } from 'class-transformer';
-import { Status, POIWeekDays, WeekDays } from '../../domain/poi/poi.entity';
-import { Country } from '../../domain/country/country.entity';
+import { Status, POIWeekDays, WeekDays } from '../../../../domain/poi/poi.entity';
+import { Country } from '../../../../domain/country/country.entity';
 
 
 class AddressDto {

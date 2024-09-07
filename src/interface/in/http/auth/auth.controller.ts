@@ -3,7 +3,7 @@ import { Controller, Post, Body, Req, UseGuards, Get, Inject, UseFilters, HttpEx
 import { IAuthPort } from '../../../../application/auth/auth.port';
 import { JwtAuthGuard } from '../../../../infrastructure/security/http/guards/jwt-auth.guard'; // Ensure correct path to the guard
 import { Request } from 'express';
-import { CustomExceptionFilter } from '../../../../infrastructure/config/custom-exception.filter';
+import { CustomExceptionFilter } from '../../../../shared/exceptions/custom-exception.filter';
 
 @Controller('auth')
 @UseFilters(CustomExceptionFilter)

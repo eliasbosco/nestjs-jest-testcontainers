@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './application/app/app.module';
 import { Logger } from '@nestjs/common';
-import { CustomExceptionFilter } from './infrastructure/config/custom-exception.filter';
+import { CustomExceptionFilter } from './shared/exceptions/custom-exception.filter';
 
 async function bootstrap() {
   const logger = new Logger();

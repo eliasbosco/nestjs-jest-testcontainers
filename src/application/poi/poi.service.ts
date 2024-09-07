@@ -1,10 +1,8 @@
 import { Inject, Injectable, NotFoundException, UseFilters } from '@nestjs/common';
 import { IPOIRepository } from '../../domain/poi/poi.repository';
-import { CreatePOIDto, UpdatePOIDto } from './poi.dto';
 import { POI } from '../../domain/poi/poi.entity';
 import { IPOIPort } from './poi.port';
-import { CustomExceptionFilter } from '../../infrastructure/config/custom-exception.filter';
-import { UpdateResult } from 'typeorm';
+import { CustomExceptionFilter } from '../../shared/exceptions/custom-exception.filter';
 
 @Injectable()
 @UseFilters(CustomExceptionFilter)
@@ -27,24 +25,18 @@ export class POIService implements IPOIPort {
         return await this.repository.findById(id);
     }
 
-    async create(createPOIDto: CreatePOIDto): Promise<POI> {
-        const poi = new POI();
-        Object.assign(poi, createPOIDto); // Populate the POI entity with data from DTO
-        delete poi.id;
+    async create(poi: POI): Promise<POI> {
         return await this.repository.create(poi);
     }
 
-    async update(id: string, updatePOIDto: UpdatePOIDto): Promise<Partial<POI>> {
+    async update(id: string, poi: Partial<POI>): Promise<Partial<POI>> {
         // Ensure that the ID is valid before proceeding
         const existingPOI = await this.repository.findById(id);
         if (!existingPOI) {
             throw new NotFoundException(`POI '${id}' not found`);
         }
 
-        // Merge the update data into the existing POI entity
-        const updatedPOI = Object.assign(existingPOI, updatePOIDto);
-        updatedPOI.id = id;
-        return this.repository.update(updatedPOI);
+        return this.repository.update(poi);
     }
 
     async delete(id: string): Promise<void> {

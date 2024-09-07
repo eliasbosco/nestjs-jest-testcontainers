@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Connection, EntityManager, Repository, UpdateResult } from 'typeorm';
+import { EntityManager, Repository, UpdateResult } from 'typeorm';
 import { POI } from '../../../domain/poi/poi.entity';
 import { IPOIRepository } from '../../../domain/poi/poi.repository';
 
@@ -8,8 +8,7 @@ import { IPOIRepository } from '../../../domain/poi/poi.repository';
 export class POIRepositoryImpl implements IPOIRepository<POI> {
     constructor(
         @InjectRepository(POI)
-        private readonly poiRepository: Repository<POI>,
-        private readonly connection: Connection
+        private readonly poiRepository: Repository<POI>
     ) { }
 
     async findAll(page: number = 1, limit: number = 10): Promise<{ data: POI[], total: number }> {
@@ -36,10 +35,10 @@ export class POIRepositoryImpl implements IPOIRepository<POI> {
         );
     }
 
-    async create(poi: Partial<POI>): Promise<POI> {
+    async create(poi: POI): Promise<POI> {
         // Start transaction
         return await this.poiRepository.manager.transaction(async (transactionalEntityManager: EntityManager) => {
-            return await this.poiRepository.save(poi);
+            return await transactionalEntityManager.save(poi);
         });
     }
 
@@ -53,7 +52,7 @@ export class POIRepositoryImpl implements IPOIRepository<POI> {
     async delete(poi: POI): Promise<void> {
         // Start transaction
         return await this.poiRepository.manager.transaction(async (transactionalEntityManager: EntityManager) => {
-            await this.poiRepository.remove(poi);
+            await transactionalEntityManager.remove(poi);
         });
     }
 }

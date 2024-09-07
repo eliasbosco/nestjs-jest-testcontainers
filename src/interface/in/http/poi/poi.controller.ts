@@ -1,9 +1,9 @@
 import { Controller, Get, Post, Put, Delete, Param, Body, Query, Inject, UseGuards, UseFilters } from '@nestjs/common';
 import { IPOIPort } from '../../../../application/poi/poi.port';
 import { POI } from '../../../../domain/poi/poi.entity';
-import { CreatePOIDto, UpdatePOIDto } from '../../../../application/poi/poi.dto';
+import { CreatePOIDto, UpdatePOIDto } from './poi.dto';
 import { JwtAuthGuard } from '../../../../infrastructure/security/http/guards/jwt-auth.guard';
-import { CustomExceptionFilter } from '../../../../infrastructure/config/custom-exception.filter';
+import { CustomExceptionFilter } from '../../../../shared/exceptions/custom-exception.filter';
 
 @Controller('pois')
 @UseGuards(JwtAuthGuard)
@@ -29,12 +29,17 @@ export class POIController {
     }
 
     @Post()
-    create(@Body() poi: CreatePOIDto) {
+    create(@Body() createPOIDto: CreatePOIDto) {
+        const poi = new POI();
+        Object.assign(poi, createPOIDto);
+        delete poi.id;
         return this.poiService.create(poi);
     }
 
     @Put(':id')
-    update(@Param('id') id: string, @Body() poi: UpdatePOIDto) {
+    update(@Param('id') id: string, @Body() updatePOIDto: UpdatePOIDto) {
+        const poi: POI = new POI();
+        Object.assign(poi, updatePOIDto);
         return this.poiService.update(id, poi);
     }
 
