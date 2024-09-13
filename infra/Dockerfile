@@ -9,6 +9,8 @@ RUN yarn install && yarn build
 
 FROM node:18 as runner
 
+RUN apt-get update && apt-get install -y netcat-openbsd
+
 ARG DB_HOST_ARG
 ARG DB_PORT_ARG
 ARG DB_USER_ARG
@@ -35,4 +37,7 @@ COPY --from=builder /temp/dist ./dist
 COPY --from=builder /temp/src ./src
 COPY --from=builder /temp/.env ./.env
 
-CMD ["node", "./dist/main.js"]
+COPY ./infra/entrypoint.sh ./entrypoint.sh
+RUN chmod +x ./entrypoint.sh
+
+ENTRYPOINT ["./entrypoint.sh"]
